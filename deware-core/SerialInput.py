@@ -27,4 +27,4 @@ while True:
     else:
         # raise error to implement
         pass
-    time.sleep(1)
+    time.sleep(2)
