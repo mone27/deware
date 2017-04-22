@@ -16,7 +16,7 @@ class homeGui(Ui_Dialog):
         
         self.timerUpadateValues = QtCore.QTimer()
         self.timerUpadateValues.timeout.connect(self.updateValues)
-        self.timerUpadateValues.start(1000)
+        self.timerUpadateValues.start(2000)
         self.dataPoll = zmq.Poller()
         self.dataPoll.register(self.dataSock, zmq.POLLIN)
     def updateValues(self):

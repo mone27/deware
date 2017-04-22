@@ -5,3 +5,4 @@ class SerialInput():
     Random = True
 class Db():
     dbFile = 'prova.sqlite'
+    time = 20
