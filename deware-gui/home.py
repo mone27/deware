@@ -20,7 +20,9 @@ class homeGui(Ui_Dialog):
         self.dataPoll = zmq.Poller()
         self.dataPoll.register(self.dataSock, zmq.POLLIN)
     def updateValues(self):
-        socks = dict(self.dataPoll.poll())
+        print('before poll')
+        socks = dict(self.dataPoll.poll(1000))
+        print('after poll')
         if self.dataSock in socks and socks[self.dataSock] == zmq.POLLIN:
             data = self.dataSock.recv_string()
             data = data.split(',')
