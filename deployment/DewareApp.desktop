@@ -6,3 +6,4 @@ Name[en_US]=App raccolta dati
 Exec=/home/pi/deware/venv/bin/python /home/pi/deware/deware_gui/home.py
 Comment[en_US]=deware app
 StartupNotify=true
+Categories=Utility

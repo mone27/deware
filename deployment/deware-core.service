@@ -1,0 +1,11 @@
+[Unit]
+Description=deware core which collects data from serial port and save it to db
+After=multi-user.target
+
+[Service]
+ExecStart=/home/pi/deware/venv/python /home/pi/deware/deware_core/main.py
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=default.target
