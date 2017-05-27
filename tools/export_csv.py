@@ -9,7 +9,6 @@ Created on Sat Apr 29 18:40:31 2017
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-assert '/home/simone/development/deware' in sys.path
 from deware_core.settings import Db
 from deware_core.sqlalchemy_models import Record
 from sqlalchemy import create_engine
