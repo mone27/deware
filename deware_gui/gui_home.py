@@ -27,7 +27,7 @@ class Ui_Dialog(object):
         self.humidity_lab.setText("")
         self.humidity_lab.setObjectName("humidity_lab")
         self.close_butt = QtWidgets.QPushButton(Dialog)
-        self.close_butt.setGeometry(QtCore.QRect(460, 230, 116, 32))
+        self.close_butt.setGeometry(QtCore.QRect(500, 400, 116, 32))
         self.close_butt.setObjectName("close_butt")
 
         self.retranslateUi(Dialog)
