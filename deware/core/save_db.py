@@ -5,17 +5,16 @@ Created on Tue Apr 18 15:57:08 2017
 
 @author: simone
 """
+from settings import Db as setg
+from sqlalchemy_models import Record
+
+from datetime import datetime
+from decimal import Decimal
 from multiprocessing import Process
 class db_manager(Process):
     def __init__(self):
         Process.__init__(self)
     def run(self):
-        from settings import Db as setg
-        from sqlalchemy_models import Record
-        
-        from datetime import datetime
-        from decimal import Decimal
-        
         
         def onData(msg):
             data = ''
