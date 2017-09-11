@@ -13,10 +13,10 @@ class SerialInput(Process):
         import time
         import serial
         import zmq
-                
+
         # open serial port
         SerPort = serial.Serial(setg.SerialPort)
-        
+
         # zmq inizialization
         ctx = zmq.Context.instance()
         PubSock = ctx.socket(zmq.PUB)
