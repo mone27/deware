@@ -3,7 +3,7 @@ Description=deware daemon
 After=multi-user.target
 
 [Service]
-ExecStart=${python} ${install_location}/bin/dewared
+ExecStart=usr/bin/python3 provabin/dewared
 Type=simple
 Restart=always
 
