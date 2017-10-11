@@ -15,7 +15,11 @@ OPTIONS = {
 }
 templates = [
     'deware.desktop.tmpl',
+<<<<<<< HEAD
     'dewared.service.tmpl'
+=======
+    'deware-core.service.tmpl'
+>>>>>>> 20eb804e31222d075164cb469192b6be8113a9d4
 ]
 def file_template(template_name):
     """ loads a string template from a file (must have .tmpl extension)
@@ -23,7 +27,14 @@ def file_template(template_name):
     """
     with open(template_name) as t, open(template_name[:-5],mode='w') as out_f:
         out_f.write(Template(t.read()).substitute(OPTIONS))
+<<<<<<< HEAD
 
 
 if __name__ == "__main__":
     [file_template(__) for __ in templates]
+=======
+file_template(templates[0])
+
+#if __name__=='__main__':
+#    map(file_template,templates)
+>>>>>>> 20eb804e31222d075164cb469192b6be8113a9d4
