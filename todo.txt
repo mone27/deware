@@ -1,0 +1,3 @@
+change multiprocessing to threading
+
+could implement serial_dht22 as 
