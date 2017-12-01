@@ -1,0 +1,11 @@
+[Unit]
+Description=deware daemon
+After=multi-user.target
+
+[Service]
+ExecStart=${python} ${install_location}/bin/dewared
+Type=simple
+Restart=always
+
+[Install]
+WantedBy=default.target
