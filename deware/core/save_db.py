@@ -11,11 +11,16 @@ from sqlalchemy_models import Record
 from datetime import datetime
 from decimal import Decimal
 from multiprocessing import Process
+import zmq
+from zmq.eventloop import ioloop, zmqstream
+from sqlalchemy import create_engine
+from sqlalchemy_models import Base
+from sqlalchemy.orm import sessionmaker
 class db_manager(Process):
     def __init__(self):
         Process.__init__(self)
     def run(self):
-        
+
         def onData(msg):
             data = ''
             for c in msg[0]:
@@ -43,18 +48,17 @@ class db_manager(Process):
         onData.temp = 0
         onData.hum = 0
         onData.count = 0
-        
-        from sqlalchemy import create_engine
+
+
         engine = create_engine('sqlite:///%s'%setg.dbFile)
-        from sqlalchemy_models import Base
+
         Base.metadata.create_all(engine)
-        from sqlalchemy.orm import sessionmaker
+
         Session = sessionmaker(bind=engine)
         session = Session()
-        
-        
-        import zmq
-        from zmq.eventloop import ioloop, zmqstream
+
+
+        #inizialize zmq
         ioloop.install()
         ctx = zmq.Context.instance()
         dataSock = ctx.socket(zmq.SUB)
@@ -68,7 +72,7 @@ class db_manager(Process):
             ioloop.IOLoop.instance().start()
         except:
             pass
-        
+
 if __name__ == '__main__':
     proc = db_manager()
     proc.start()
@@ -84,6 +88,3 @@ if __name__ == '__main__':
 #        record = Record(time = datetime.utcnow(), temp=temp, hum=hum)
 #        session.add(record)
 #        session.commit()
-        
-
-
