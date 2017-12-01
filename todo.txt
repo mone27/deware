@@ -1,3 +1,7 @@
 change multiprocessing to threading
 
-could implement serial_dht22 as 
+could implement serial_dht22 as
+
+set icon
+
+improve installation process with system variable and/or global 

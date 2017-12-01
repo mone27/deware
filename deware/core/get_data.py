@@ -5,23 +5,22 @@
 """driver that reads from serial port
     and sends data on zmq pub socket"""
 from multiprocessing import Process
+from settings import SerialInput as setg
+import time
+import serial
+import zmq
 class SerialInput(Process):
     def __init__(self):
         Process.__init__(self)
     def run(self):
-        from settings import SerialInput as setg
-        import time
-        import serial
-        import zmq
-
-        # open serial port
+        # open serial port # just another stupid comment!!!!
         SerPort = serial.Serial(setg.SerialPort)
-
         # zmq inizialization
         ctx = zmq.Context.instance()
         PubSock = ctx.socket(zmq.PUB)
         PubSock.bind("tcp://127.0.0.1:%s" %setg.PubPort)
         while True:
+# this is kept for hystorical reason
             data = ''
             for c in SerPort.readline():
                 data += (chr(c))

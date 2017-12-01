@@ -1,4 +1,9 @@
 act
+# for vscode
+.vscode/
+
+
+
 .spyproject
 .spyproject/*
 lib
