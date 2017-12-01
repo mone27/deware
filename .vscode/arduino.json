@@ -1,0 +1,5 @@
+{
+    "board": "arduino:avr:uno",
+    "sketch": "Arduino/A-128_Arduno-to-COZIR/AN128_ardunio_cozir.ino",
+    "port": "/dev/ttyACM0"
+}

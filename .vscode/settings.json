@@ -1,0 +1,6 @@
+{
+    "arduino.path": "/home/simone/Downloads/applications/arduino-1.8.5",
+    "arduino.additionalUrls": "/home/simone/Arduino/libraries/",
+    "arduino.logLevel": "info", 
+    "arduino.enableUSBDetection": true
+}
