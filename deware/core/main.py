@@ -6,7 +6,7 @@ Created on Sat Apr 22 09:36:28 2017
 @author: simone
 """
 
-import SerialInput
+import get_data
 import db_manager
 SerialInputProc = SerialInput.SerialInput()
 db_manager_proc = db_manager.db_manager()
