@@ -50,7 +50,7 @@ class db_manager(Process):
         onData.count = 0
 
 
-        engine = create_engine('sqlite:///%s'%setg.dbFile)
+        engine = create_engine(f"sqlite:///{setg.dbFile}")
 
         Base.metadata.create_all(engine)
 
@@ -63,7 +63,7 @@ class db_manager(Process):
         ctx = zmq.Context.instance()
         dataSock = ctx.socket(zmq.SUB)
         dataSock.setsockopt_string(zmq.SUBSCRIBE, "")
-        dataSock.connect("tcp://127.0.0.1:7001")
+        dataSock.connect(f"tcp://127.0.0.1:{PubPort}")
         #dataPoll = zmq.Poller()
         #dataPoll.register(dataSock, zmq.POLLIN)
         dataStream = zmqstream.ZMQStream(dataSock)
