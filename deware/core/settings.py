@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
+from  os import environ
 class SerialInput():
-    SerialPort = '/dev/arduino_uno'
+    SerialPort = environ.get("DEWARE_SERIAL_DEVICE", "/dev/arduino_uno")
     PubPort = 7001
     Random = True
 class Db():
