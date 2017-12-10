@@ -16,6 +16,7 @@ from logging import info, debug, warning
 class sensors_read(Process):
     def __init__(self):
         Process.__init__(self)
+        debug("starting sensor reads")
         try:
             self.ser_port = serial.Serial(setg.serial_port)
         except serial.SerialException as msg:
@@ -24,10 +25,13 @@ class sensors_read(Process):
         self.ctx = zmq.Context.instance()
         self.pub_socket = self.ctx.socket(zmq.PUB)
         self.pub_socket.bind(f"tcp://127.0.0.1:{setg.pub_port}")
+
     def run(self):
+
         while True:
             try:
-                data = self.ser_port.readline().deconde()
+                data = self.ser_port.readline().decode()
+                print(data)
 
             except serial.SerialException as msg:
                 warning(msg)
@@ -44,10 +48,7 @@ class sensors_read(Process):
 
 # this is kept for hystorical reason
 #            data = ''
-#            for c in SerPort.readline():
-#                data += (chr(c))
-#            data = data.split(',')
-#            print(data)
+#            for c in SerPort.readlin-
 #            if data[0] == 'OK':
 #                print('humidity:',data[1])
 #                print('temperature:',data[2])
