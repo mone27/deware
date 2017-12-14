@@ -7,8 +7,8 @@ Created on Sat Apr 22 09:36:28 2017
 """
 
 import get_data
-import db_manager
-SerialInputProc = SerialInput.SerialInput()
-db_manager_proc = db_manager.db_manager()
-SerialInputProc.start()
-db_manager_proc.start()
+import save_db
+data_input = get_data.sensors_read()
+db_manager = save_db.db_manager()
+data_input.start()
+db_manager.start()

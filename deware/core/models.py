@@ -10,16 +10,17 @@ Created on Tue Apr 18 15:10:59 2017
 from sqlalchemy.ext.declarative import declarative_base
 Base = declarative_base()
 
-from sqlalchemy import Column, Float, DateTime
+from sqlalchemy import Column, Float, DateTime, Integer
 class Record(Base):
     __tablename__ = 'records'
 
     time = Column(DateTime, primary_key=True)
     temp = Column(Float( asdecimal = True ))
     hum = Column(Float( asdecimal = True ))
+    co2 = Column(Integer())
     def __repr__(self):
-        return "<Record: date='%s', temp='%s', hum='%s'>"\
-        %(self.time, self.temp, self.hum)
+        return (f"<Record: date='{self.time}', temp='self.temp'"
+                f", hum='{self.hum}, co2='{self.co2}'>")
+    
     def __str__(self):
-        return "'%s, '%s, '%s'>"\
-        %(self.time, str(self.temp), str(self.hum))
+        return f"'{self.time}', '{self.temp}, '{self.hum}', '{self.co2}'>"

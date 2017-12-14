@@ -5,30 +5,30 @@ Created on Tue Apr 18 15:57:08 2017
 
 @author: simone
 """
-from settings import Db as setg
-from sqlalchemy_models import Record
+#%cd deware/core
+import settings  as setg
+from models import Record
 
 from datetime import datetime
 from decimal import Decimal
 from multiprocessing import Process
+
 import zmq
 from zmq.eventloop import ioloop, zmqstream
 from sqlalchemy import create_engine
-from sqlalchemy_models import Base
+from models import Base
 from sqlalchemy.orm import sessionmaker
+
+import logging
+log = logging.getLogger(__name__)
+log.setLevel(logging.DEBUG)
 class db_manager(Process):
     def __init__(self):
         Process.__init__(self)
     def run(self):
-
         def onData(msg):
-            data = ''
-            for c in msg[0]:
-                data += chr(c)
-            data = data.split(',')
-            print(data)
-            temp = float(data[1].split()[1])
-            hum = float(data[0].split()[1])
+            temp = float(msg[0]["temp"])
+            hum = float(msg[0]["hum"])
             onData.temp += temp
             onData.hum += hum
             onData.count += 1
@@ -36,13 +36,14 @@ class db_manager(Process):
                 record = Record(time = datetime.utcnow(),\
                                 temp = Decimal(onData.temp / onData.count)\
                                 , hum = Decimal(onData.hum / onData.count))
-                print(record)
+                log.debug(record)
                 session.add(record)
                 session.commit()
                 onData.lastCommit = datetime.utcnow()
                 onData.temp = 0
                 onData.hum = 0
                 onData.count = 0
+
         # for inizialize time
         onData.lastCommit = datetime.utcnow()
         onData.temp = 0
@@ -50,7 +51,7 @@ class db_manager(Process):
         onData.count = 0
 
 
-        engine = create_engine(f"sqlite:///{setg.dbFile}")
+        engine = create_engine(f"sqlite:///{setg.db_file}")
 
         Base.metadata.create_all(engine)
 
@@ -63,15 +64,17 @@ class db_manager(Process):
         ctx = zmq.Context.instance()
         dataSock = ctx.socket(zmq.SUB)
         dataSock.setsockopt_string(zmq.SUBSCRIBE, "")
-        dataSock.connect(f"tcp://127.0.0.1:{PubPort}")
+        dataSock.connect(f"tcp://127.0.0.1:{setg.pub_port}")
         #dataPoll = zmq.Poller()
         #dataPoll.register(dataSock, zmq.POLLIN)
         dataStream = zmqstream.ZMQStream(dataSock)
         dataStream.on_recv(onData)
+        log.info("started db_manager")
         try:
             ioloop.IOLoop.instance().start()
         except:
             pass
+
 
 if __name__ == '__main__':
     proc = db_manager()
