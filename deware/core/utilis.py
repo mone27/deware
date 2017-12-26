@@ -7,11 +7,11 @@ class OutOfRangeError(Exception):
         self.name = name
         self.value = value
     def __repr__(self):
-        return f"the reading of {self.name} is out of range,\
-                read value is : {self.value}"
+        return (f"the reading of {self.name} is out of range, "
+                f"read value is : {self.value}")
     def __str__(self):
-        return f"the reading of {self.name} is out of range,\
-    read value is : {self.value}"
+        return (f"the reading of {self.name} is out of range, "
+                f"read value is : {self.value}")
 
 def serial_ports():
     """ Lists serial port names

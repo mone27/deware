@@ -8,7 +8,10 @@ Created on Sat Apr 22 09:36:28 2017
 
 import get_data
 import save_db
+import logging
+
+logging.basicConfig(level = logging.DEBUG)
 data_input = get_data.sensors_read()
-db_manager = save_db.db_manager()
+db_manager_proc = save_db.db_manager()
 data_input.start()
-db_manager.start()
+db_manager_proc.start()
