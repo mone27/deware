@@ -6,8 +6,8 @@ Created on Tue Apr 18 15:57:08 2017
 @author: simone
 """
 #%cd deware/core
-import settings  as setg
-from models import Record
+from deware.core import settings  as setg
+from deware.core.models import Record
 import json
 
 from datetime import datetime
@@ -17,7 +17,7 @@ from multiprocessing import Process
 import zmq
 from zmq.eventloop import ioloop, zmqstream
 from sqlalchemy import create_engine
-from models import Base
+from deware.core.models import Base
 from sqlalchemy.orm import sessionmaker
 
 import logging

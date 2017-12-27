@@ -9,5 +9,5 @@ setup(name='deware',
       author_email='mone.massaro@gmail.com',
       url='https://www.python.org/sigs/distutils-sig/',
       packages=['deware.core', 'deware.gui'],
-      scripts=['deware/core/main','deware/gui/app'],
+      scripts=['deware/core/main.py','deware/gui/app.py'],
      )

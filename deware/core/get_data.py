@@ -6,13 +6,13 @@
     and sends data on zmq pub socket"""
 # %cd deware/core
 from multiprocessing import Process
-import settings as setg
+from deware.core import settings as setg
 import time
 import serial
 import zmq
 import json
 import logging
-from utilis import OutOfRangeError
+from deware.core.utilis import OutOfRangeError
 import time
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
