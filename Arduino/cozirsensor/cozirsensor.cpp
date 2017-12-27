@@ -12,7 +12,7 @@ cozirsensor::cozirsensor()
     Serial << F("finish inizialize") << endl;
 */
 }
-bool cozirsensor::init(SoftwareSerial * css)
+void cozirsensor::init(SoftwareSerial * css)
       //ssc software serial connection
 {
     serialPort = css;
@@ -33,7 +33,6 @@ bool cozirsensor::init(SoftwareSerial * css)
     delay(10000);
     serialPort->print("K 2\r\n"); // set polling mode
     Serial << F("finish inizialize") << endl;
-    return true;
 
 }
 uint32_t cozirsensor::Request(char command)
@@ -82,9 +81,10 @@ uint32_t cozirsensor::Co2()
 }
 uint32_t cozirsensor::getco2multiplier() // should be renamed
 {
-    char buffer[26];
+
     serialPort->print(".\r\n");
-    delay(120); // needed if sensor is reading value so does non respond
+    char buffer[26];
+    delay(100); // needed if sensor is reading value so does non respond
     uint8_t i = 0;
     while ( serialPort->available() && i < 25) // 25 is size of buffer needed to avoid overflow
     {
@@ -106,5 +106,47 @@ void cozirsensor::calibrateFreshAir()
     serialPort->print("G\r\n");
     delay(1000);
     Serial << F("calibrated");
+
+}
+void cozirsensor::calibrate(uint16_t ppm)
+{
+    serialPort->print("X ");
+    serialPort->print(ppm/10);
+    serialPort->print("\r\n");
+    char buffer[26];
+    delay(120); // needed if sensor is reading value so does non respond
+    uint8_t i = 0;
+    while ( serialPort->available() && i < 25) // 25 is size of buffer needed to avoid overflow
+    {
+        buffer[i] = serialPort->read();
+        if (buffer[i] == '\n') break;
+        i ++;
+
+    }
+
+    buffer[i] = '\0';
+    Serial << F("value returned after calibration : " )<< buffer << endl;
+
+}
+void cozirsensor::calibrateNitrogen(){
+  serialPort->print("U\r\n");
+  char buffer[26];
+  while(serialPort->available() > 0) //clears serial port buffer
+  {
+      char t = serialPort->read();
+  }
+  delay(120); // needed if sensor is reading value so does non respond
+  uint8_t i = 0;
+  while ( serialPort->available() && i < 25) // 25 is size of buffer needed to avoid overflow
+  {
+      buffer[i] = serialPort->read();
+      if (buffer[i] == '\n') break;
+      i ++;
+
+  }
+
+  buffer[i] = '\0';
+  Serial << F("value returned after calibration : " )<< buffer << "|" << endl;
+
 
 }

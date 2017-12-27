@@ -10,10 +10,12 @@ public:
     cozirsensor();
     float Temperature();
     float Humidity();
-    bool init(SoftwareSerial * css );
+    void init(SoftwareSerial * css );
     uint32_t Co2();
     uint32_t getco2multiplier();
     void calibrateFreshAir();
+    void calibrate(uint16_t ppm);
+    void calibrateNitrogen();
 
 private:
     SoftwareSerial * serialPort;
