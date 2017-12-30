@@ -1,5 +1,4 @@
 pyserial
-PyQt5
 pyzmq
 tornado
-sqlalchemy 
+sqlalchemy
