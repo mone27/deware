@@ -5,7 +5,8 @@ Created on Sat Apr 22 09:36:28 2017
 
 @author: simone
 """
-
+import sys
+print(sys.version)
 from deware.core import get_data
 from deware.core import save_db
 import logging
