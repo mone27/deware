@@ -1,7 +1,7 @@
 act
 # for vscode
 .vscode/
-
+.idea/
 
 
 .spyproject

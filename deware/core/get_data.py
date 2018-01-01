@@ -5,9 +5,10 @@
 """driver that reads from serial port
     and sends data on zmq pub socket"""
 # %cd deware/core
-from multiprocessing import Process
+from threading import Thread
 from deware.core import settings as setg
 import time
+import random
 import serial
 import zmq
 import json
@@ -20,12 +21,20 @@ logging.basicConfig(level = logging.DEBUG)
 from deware.core.save_db import db_manager
 
 
-class SensorRead(Process):
+def get_random_data():  #may be in external file
+     time.sleep(4)
+     data = dict(temp = random.randint(-20, 50), hum=random.randint(0, 95), co2=random.randint(0, 20000))
+     return json.dumps(data).encode()
+
+class SensorRead(Thread):
     def __init__(self):
-        Process.__init__(self)
+        Thread.__init__(self)
         log.info("starting sensor reads")
         try:
             self.ser_port = serial.serial_for_url(setg.serial_port)
+            if setg.serial_port=="loop://":
+                self.ser_port.readline = get_random_data
+
         except serial.SerialException as msg:
             log.warning(msg)
         # zmq inizialization
