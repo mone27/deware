@@ -70,5 +70,5 @@ class SensorRead(Process):
 
 
 if __name__ == '__main__':
-    proc = sensors_read()
+    proc = SensorRead()
     proc.start()
