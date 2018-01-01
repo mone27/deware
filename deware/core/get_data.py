@@ -17,14 +17,15 @@ import time
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 logging.basicConfig(level = logging.DEBUG)
-from save_db import db_manager
+from deware.core.save_db import db_manager
 
-class sensors_read(Process):
+
+class SensorRead(Process):
     def __init__(self):
         Process.__init__(self)
         log.info("starting sensor reads")
         try:
-            self.ser_port = serial.Serial(setg.serial_port)
+            self.ser_port = serial.serial_for_url(setg.serial_port)
         except serial.SerialException as msg:
             log.warning(msg)
         # zmq inizialization
@@ -41,13 +42,17 @@ class sensors_read(Process):
                 # must perform checks on data!!
                 data_dict = json.loads(data)
                 log.debug(data_dict)
+
+                # check whether the data is in valid range to avoid recording outlier
                 if not data_dict["temp"] < -50 and data_dict["temp"] > 150:
                     raise OutOfRangeError("temp",data_dict["temp"])
-                data_dict["hum"]
-                data_dict["co2"]
+                if data_dict["hum"]<0 and data_dict["hum"] > 100:
+                    raise OutOfRangeError("hum", data_dict["hum"])
+                if data_dict["co2"] <0:
+                    raise OutOfRangeError("co2", data_dict["co2"])
 
             except serial.SerialException as msg:
-                #raise an exception if serial port does not work for too long
+                # raise an exception if serial port does not work for too long
                 if self.serial_exception_count > 10 :
                     log.error(f"serial error: {msg} raising exception")
                     raise
