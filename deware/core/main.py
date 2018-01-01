@@ -1,13 +1,14 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python3.6
 # -*- coding: utf-8 -*-
 """
 Created on Sat Apr 22 09:36:28 2017
 
 @author: simone
 """
-
-import get_data
-import save_db
+import sys
+print(sys.version)
+from deware.core import get_data
+from deware.core import save_db
 import logging
 
 logging.basicConfig(level = logging.DEBUG)
