@@ -2,7 +2,11 @@
 #include "SoftwareSerial.h"
 #include "utils.h" //define endl '\n'
 #include "ArduinoJson.h"
-#define tab   << '\t'
+#include <Wire.h>
+#include <TimeLib.h>
+#include <DS1307RTC.h>
+
+
 SoftwareSerial css(10,11);
 cozirsensor czrs;
 SoftwareSerial * serialPort;
@@ -30,8 +34,18 @@ void loop() {
 
   StaticJsonBuffer<83> jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
-  root["time"] = 1351824120;
-  root["temp"] = czrs.Temperature();
+  tmElements_t tm;
+  
+  if(RTC.read(tm)){
+    root["time"] = String(tm.Hour) + ':' + String(tm. Minute) + ':' + String(tm.Second)
+                    + ' ' + String(tm.Day) + '/' +  String(tm.Month) 
+                    + '/' + String(tmYearToCalendar(tm.Year));
+  }
+  else{
+    Serial << F("error reading time");
+  }
+  
+    root["temp"] = czrs.Temperature();
   root["hum"] = czrs.Humidity();
   root["co2"] = czrs.Co2();
   
