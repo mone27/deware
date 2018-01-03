@@ -11,13 +11,13 @@ from deware.core import get_data
 from deware.core import save_db
 from deware.core import settings as setg
 import logging
-
-logging.basicConfig(filename=setg.log_file,
-                    filemode='a',
-                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
-                    datefmt='%D:%%H:%M:%S',
-                    level=logging.DEBUG)
-# logging.basicConfig(level = logging.DEBUG)
+#
+# logging.basicConfig(filename=setg.log_file,
+#                     filemode='a',
+#                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+#                     datefmt='%D:%%H:%M:%S',
+#                     level=logging.DEBUG)
+logging.basicConfig(level = logging.DEBUG)
 data_input = get_data.SensorRead().start()
 db_manager = save_db.DbManager().start()
 

@@ -49,8 +49,9 @@ class DbManager(Thread):
             data = self.sub_socket.recv_json()
             count +=1
             for key in data:
-                sum_data[key] += data[key]
-                log.debug(f"key :{key} value: {data[key]}") #could be removed
+                if key != "time": sum_data[key] += data[key]
+                # log.debug(f"key :{key} value: {data[key]}") #could be removed
+            log.debug('sum_data :'+str(sum_data))
             if (datetime.utcnow() - last_commit).seconds >= setg.time:
                 # calculate avg
                 for key in sum_data:
@@ -62,7 +63,7 @@ class DbManager(Thread):
                 # need to add time to avg dict
                 log.debug("avg_data :"+str(avg_data))
                 record_commit = Record(
-                    time = datetime.utcnow(),
+                    time = datetime.strptime(data["time"], '%H:%M:%S %d/%m/%Y'),
                     temp = avg_data["temp"],
                     hum = avg_data["hum"],
                     co2 = avg_data["co2"])
