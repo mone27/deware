@@ -4,99 +4,76 @@
 Created on Tue Apr 18 15:57:08 2017
 
 @author: simone
+
+read a json from zmq port and saves it to a sqlalchemy sb
 """
-#%cd deware/core
-from deware.core import settings  as setg
-from deware.core.models import Record
-import json
+from threading import Thread
+import zmq
+import logging
 
 from datetime import datetime
-from decimal import Decimal
-from multiprocessing import Process
-
-import zmq
-from zmq.eventloop import ioloop, zmqstream
 from sqlalchemy import create_engine
-from deware.core.models import Base
 from sqlalchemy.orm import sessionmaker
+from decimal import Decimal
 
-import logging
+from deware.core import settings as setg
+from deware.core.models import Base, Record
+
+
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
-class db_manager(Process):
+
+
+class DbManager(Thread):
+
     def __init__(self):
-        Process.__init__(self)
-        print(" anche io ci sono!!!!!")
-    def on_data(msg, f_run=True):
-        if f_run == True :
-            f_run = False
-            db_manager.on_data.lastCommit = datetime.utcnow()
-            db_manager.on_data.temp = 0
-            db_manager.on_data.hum = 0
-            db_manager.on_data.co2 = 0
-            db_manager.on_data.count = 1
-
-            engine = create_engine(f"sqlite:///{setg.db_file}")
-            Base.metadata.create_all(engine)
-            Session = sessionmaker(bind=engine)
-            db_manager.on_data.session = Session()
-
-        log.debug(f"received {msg}")
-        data_dict = json.loads(msg)
-        temp = float(data_dict["temp"])
-        hum = float(data_dict["hum"])
-        co2 = int(data_dict["co2"])
-
-        # db_manager.on_data.temp += temp
-        # db_manager.on_data.hum += hum
-        # db_manager.on_data.co2 += co2
-        # db_manager.on_data.count += 1
-        #if (datetime.utcnow() - db_manager.on_data.lastCommit).seconds >= setg.time :
-        record = Record(time = datetime.utcnow(),
-        #time = datetime.fromtimestamp(data_dict["time"]),
-                        temp = Decimal(temp ),
-                        hum = Decimal(hum),
-                        co2 = co2
-                        )
-                        # temp = Decimal(db_manager.on_data.temp / db_manager.on_data.count),
-                        # hum = Decimal(db_manager.on_data.hum / db_manager.on_data.count),
-                        # co2 = db_manager.on_data.co2 / db_manager.on_data.count
-                        # )
-        log.debug(record)
-        db_manager.on_data.session.add(record)
-        db_manager.on_data.session.commit()
-        db_manager.on_data.lastCommit = datetime.utcnow()
-        db_manager.on_data.temp = 0
-        db_manager.on_data.hum = 0
-        db_manager.on_data.count = 1
+        Thread.__init__(self)
+        # connect to zmq pub socket
+        ctx = zmq.Context.instance()
+        self.sub_socket = ctx.socket(zmq.SUB)
+        self.sub_socket.setsockopt_string(zmq.SUBSCRIBE, "")
+        self.sub_socket.connect(f"tcp://127.0.0.1:{setg.pub_port}")
+        # init databases and sqlalchemy session
+        engine = create_engine(f"sqlite:///{setg.db_file}")
+        Base.metadata.create_all(engine)
+        Session = sessionmaker(bind=engine)
+        self.session = Session()
 
     def run(self):
-        ioloop.install()
-        ctx = zmq.Context.instance()
-        dataSock = ctx.socket(zmq.SUB)
-        dataSock.setsockopt_string(zmq.SUBSCRIBE, "")
-        dataSock.connect(f"tcp://127.0.0.1:{setg.pub_port}")
-        #dataPoll = zmq.Poller()
-        #dataPoll.register(dataSock, zmq.POLLIN)
-        dataStream = zmqstream.ZMQStream(dataSock)
-        dataStream.on_recv(db_manager.on_data)
-        log.info("started db_manager")
-        ioloop.IOLoop.instance().start()
+        log.info("started db manager")
+        sum_data = {"temp":0, "hum":0, "co2":0} # this will crash with arduino!!! since it sends also tim
+        avg_data = {}
+        count = 0
+        last_commit = datetime.utcnow()
+        while True:
+            data = self.sub_socket.recv_json()
+            count +=1
+            for key in data:
+                sum_data[key] += data[key]
+                log.debug(f"key :{key} value: {data[key]}") #could be removed
+            if (datetime.utcnow() - last_commit).seconds >= setg.time:
+                # calculate avg
+                for key in sum_data:
+                    avg_data[key]= round(Decimal(sum_data[key])/count,2)
+                    # todo co2 with 2 zeros after point could be imporved low importance
+                count = 0
+                sum_data = {"temp":0, "hum":0, "co2":0}
+                last_commit = datetime.utcnow()
+                # need to add time to avg dict
+                log.debug("avg_data :"+str(avg_data))
+                record_commit = Record(
+                    time = datetime.utcnow(),
+                    temp = avg_data["temp"],
+                    hum = avg_data["hum"],
+                    co2 = avg_data["co2"])
+                self.session.add(record_commit)
+                self.session.commit()
+                log.info("added to database record:"+repr(record_commit))
 
 
-
-if __name__ == '__main__':
-    proc = db_manager()
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.DEBUG)
+    proc = DbManager()
     proc.start()
 
-#while True:
-#    socks = dict(dataPoll.poll())
-#    if dataSock in socks and socks[dataSock] == zmq.POLLIN:
-#        data = dataSock.recv_string()
-#        data = data.split(',')
-#        print(data)
-#        temp = Decimal(data[0].split()[1])
-#        hum = Decimal(data[1].split()[1])
-#        record = Record(time = datetime.utcnow(), temp=temp, hum=hum)
-#        session.add(record)
-#        session.commit()
+

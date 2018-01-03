@@ -7,7 +7,7 @@
 # %cd deware/core
 from threading import Thread
 from deware.core import settings as setg
-import time
+
 import random
 import serial
 import zmq
@@ -17,11 +17,11 @@ from deware.core.utilis import OutOfRangeError
 import time
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
-logging.basicConfig(level = logging.DEBUG)
-from deware.core.save_db import db_manager
 
 
-def get_random_data():  #may be in external file
+
+
+def get_random_data():  # may be in external file not a very good way for testing  idea:spawn a thread from main
      time.sleep(4)
      data = dict(temp = random.randint(-20, 50), hum=random.randint(0, 95), co2=random.randint(0, 20000))
      return json.dumps(data).encode()
@@ -75,9 +75,10 @@ class SensorRead(Thread):
             else:
                 self.pub_socket.send_string(data)
                 log.debug("zmq socket sent data: " + data)
-                db_manager.on_data(data)
+                # db_manager.on_data(data)
 
 
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
     proc = SensorRead()
     proc.start()

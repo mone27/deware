@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from  os import environ
+import os
 from . utilis import serial_ports
+
 pub_port = 7001
 scanned_serial_port = '/dev/zero'
 try:
@@ -10,5 +12,9 @@ except IndexError:
     scanned_serial_port = "loop://"
 serial_port = environ.get("DEWARE_SERIAL_DEVICE", scanned_serial_port)
 
-db_file = "prova.sqlite"
-time = 2
+
+db_file = os.path.abspath(os.getcwd())+"/prova.sqlite"
+print(db_file)
+time = 16
+
+log_file = "log.txt"
