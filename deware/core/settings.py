@@ -18,3 +18,4 @@ print(db_file)
 time = 16
 
 log_file = "log.txt"
+log_to_console = True
