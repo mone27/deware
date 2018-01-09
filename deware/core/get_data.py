@@ -33,6 +33,8 @@ class SensorRead(Thread):
         try:
             self.ser_port = serial.serial_for_url(setg.serial_port)
             if setg.serial_port=="loop://":
+                log.warning("no serial port found! using loop device"
+                            "if not running tests pleae check wiring.")
                 self.ser_port.readline = get_random_data
 
         except serial.SerialException as msg:
