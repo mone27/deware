@@ -14,13 +14,15 @@ sub_socket.setsockopt_string(zmq.SUBSCRIBE, "")
 sub_socket.connect(f"tcp://127.0.0.1:{setg.pub_port}")
 
 while True:
+
     data = sub_socket.recv_json()
+    os.system("clear")
     count += 1
     for key in data:  # not he most elegant and pythonic way
         if key!="time": sum_data[key] += data[key]
+    print("------------------------data mesaured now----------------")
     for key in data:
         print(key + ": "+ str(data[key]))
+    print("--------------------data avg since script is running-----")
     for key in sum_data:
         print(key + " avg: "+ str(sum_data[key]/count))
-    os.system("clear")
-
