@@ -14,10 +14,10 @@ except IndexError:
 serial_port = environ.get("DEWARE_SERIAL_DEVICE", scanned_serial_port)
 
 
-db_file = os.path.abspath(os.getcwd())+"/prova.sqlite"
+db_file = "/home/raspberry/deware_data/db.sqlite" # should do this using sed todo be less lazy
 print(db_file)
 time = 16
 
-log_file = "log.txt"
-log_to_console = True
+log_file = "/home/raspberry/deware_data/logs.txt"
+log_to_console = False
 log_level = logging.INFO
