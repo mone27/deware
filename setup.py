@@ -7,7 +7,7 @@ setup(name='deware',
       description='deware sensor software',
       author='simone massaro',
       author_email='mone.massaro@gmail.com',
-      url='https://www.python.org/sigs/distutils-sig/',
+      url='https://github.com/mone27/deware',
       packages=['deware.core', 'deware.gui'],
       scripts=['deware/core/main.py','deware/gui/app.py'],
      )
