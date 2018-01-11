@@ -5,19 +5,32 @@ if [ ! -d "$HOME/berryconda3" ]; then
     bash Berryconda3-2.0.0-Linux-armv7l.sh -b
 fi
 
-INSTALL_DIR = "$HOME/berryconda3"
+INSTALL_DIR="$HOME/berryconda3"
 
-source ${INSTALL_DIR}/bin/activate
+echo $INSTALL_DIR
+
+source $INSTALL_DIR/bin/activate
 
 
-mkdir $HOME/deware_data/
+mkdir -p $HOME/deware_data/
 
-mkdir deware_downloads
+mkdir -p deware_downloads
 cd deware_downloads
-git clone https://github.com/mone27/deware.git
+if [ ! -d "deware" ]; then
+	git clone https://github.com/mone27/deware.git
+else
+	cd deware
+	git fetch --all
+	git reset --hard origin/master
+	cd ..
+fi
+cd deware
+
+pip install -r requirements.txt
+
 python setup.py install
 
-rm $INSTALL_DIR/lib/python3.6/site-packages/deware/core/settings.py
+
 mv $INSTALL_DIR/lib/python3.6/site-packages/deware/core/settings_raspberry.py $INSTALL_DIR/lib/python3.6/site-packages/deware/core/settings.py
 
 
