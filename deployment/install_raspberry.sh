@@ -5,7 +5,7 @@ if [ ! -d "$HOME/berryconda3" ]; then
     bash Berryconda3-2.0.0-Linux-armv7l.sh -b
 fi
 
-export INSTALL_DIR ="$HOME/berryconda3"
+INSTALL_DIR = "$HOME/berryconda3"
 
 source ${INSTALL_DIR}/bin/activate
 
