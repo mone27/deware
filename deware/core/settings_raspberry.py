@@ -18,6 +18,6 @@ db_file = "/home/pi/deware_data/db.sqlite" # should do this using sed # cominti?
 print(db_file)
 time = 16
 
-log_file = "/home/raspberry/deware_data/logs.txt"
+log_file = "/home/pi/deware_data/logs.txt"
 log_to_console = False
 log_level = logging.INFO
