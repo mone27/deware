@@ -14,6 +14,7 @@ class OutOfRangeError(Exception):
                 f"read value is : {self.value}")
 
 def serial_ports():
+    #patched from a verison found on stack overflow may be refacorest
     """ Lists serial port names
 
         :raises EnvironmentError:
@@ -39,4 +40,7 @@ def serial_ports():
             result.append(port)
         except (OSError, serial.SerialException):
             pass
-    return result
+    if len(result) == 0:
+        return "loop://"
+    else
+        return result[0]
