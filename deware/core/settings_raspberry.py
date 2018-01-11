@@ -14,7 +14,7 @@ except IndexError:
 serial_port = environ.get("DEWARE_SERIAL_DEVICE", scanned_serial_port)
 
 
-db_file = "/home/pi/deware_data/db.sqlite" # should do this using sed todo be less lazy
+db_file = "/home/pi/deware_data/db.sqlite" # should do this using sed # cominti? todo be less lazy
 print(db_file)
 time = 16
 
