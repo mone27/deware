@@ -42,5 +42,5 @@ def serial_ports():
             pass
     if len(result) == 0:
         return "loop://"
-    else
+    else:
         return result[0]
