@@ -41,7 +41,7 @@ class DbManager(Thread):
 
     def run(self):
         log.info("started db manager")
-        sum_data = {"temp":0, "hum":0, "co2":0} # this will crash with arduino!!! since it sends also tim
+        sum_data = {"temp":0, "hum":0, "co2":0}
         avg_data = {}
         count = 0
         last_commit = datetime.utcnow()

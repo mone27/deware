@@ -1,6 +1,10 @@
 import sys
 import glob
 import serial
+import json
+from datetime import datetime
+import random
+import time
 
 class OutOfRangeError(Exception):
     def __init__(self, name="sensor reading", value=0):
@@ -12,6 +16,13 @@ class OutOfRangeError(Exception):
     def __str__(self):
         return (f"the reading of {self.name} is out of range, "
                 f"read value is : {self.value}")
+
+
+def get_random_data():  # may be in external file not a very good way for testing  idea:spawn a thread from main
+    time.sleep(4)
+    data = dict(time=datetime.utcnow().strftime('%H:%M:%S %d/%m/%Y'),
+                temp=random.randint(-20, 50), hum=random.randint(0, 95), co2=random.randint(0, 20000))
+    return json.dumps(data).encode()
 
 def serial_ports():
     #patched from a verison found on stack overflow may be refacorest

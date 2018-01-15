@@ -6,25 +6,19 @@
     and sends data on zmq pub socket"""
 # %cd deware/core
 from threading import Thread
-from deware.core import settings as setg
-
-import random
 import serial
 import zmq
 import json
 import logging
-from deware.core.utilis import OutOfRangeError
 import time
+
+from deware.core import settings as setg
+from deware.core.utilis import OutOfRangeError
+from deware.core.utilis import get_random_data
+
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
-
-
-
-def get_random_data():  # may be in external file not a very good way for testing  idea:spawn a thread from main
-     time.sleep(4)
-     data = dict(temp = random.randint(-20, 50), hum=random.randint(0, 95), co2=random.randint(0, 20000))
-     return json.dumps(data).encode()
 
 class SensorRead(Thread):
     def __init__(self):
@@ -33,8 +27,8 @@ class SensorRead(Thread):
         try:
             self.ser_port = serial.serial_for_url(setg.serial_port)
             if setg.serial_port=="loop://":
-                log.warning("no serial port found! using loop device"
-                            "if not running tests pleae check wiring.")
+                log.warning("no serial port found! using loop device "
+                            "if not running tests please check wiring.")
                 self.ser_port.readline = get_random_data
 
         except serial.SerialException as msg:

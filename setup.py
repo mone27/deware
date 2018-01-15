@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(name='deware',
-      version='0.0.1',
+      version='1.0',
       description='deware sensor software',
       author='simone massaro',
       author_email='mone.massaro@gmail.com',
