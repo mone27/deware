@@ -5,7 +5,8 @@ Created on Tue Apr 18 15:57:08 2017
 
 @author: simone
 
-read a json from zmq port and saves it to a sqlalchemy sb
+read a json from zmq sub socket and saves it to a sqlalchemy db
+using defined models
 """
 from threading import Thread
 import zmq
@@ -25,8 +26,10 @@ log.setLevel(logging.DEBUG)
 
 
 class DbManager(Thread):
+    """thread which reads json data on zmq sub socket saves it to db"""
 
     def __init__(self):
+        """init zmq socket and db connection (create db if needed)"""
         Thread.__init__(self)
         # connect to zmq pub socket
         ctx = zmq.Context.instance()
@@ -40,23 +43,23 @@ class DbManager(Thread):
         self.session = Session()
 
     def run(self):
+        """starts loop to read data and """
         log.info("started db manager")
-        sum_data = {"temp":0, "hum":0, "co2":0}
+        sum_data = {"temp": 0, "hum": 0, "co2": 0}
         avg_data = {}
         count = 0
         last_commit = datetime.utcnow()
         while True:
-            data = self.sub_socket.recv_json()
+            data = self.sub_socket.recv_json()  # here the thread blocks waiting for input
             count +=1
             for key in data:
-                if key != "time": sum_data[key] += data[key]
-                # log.debug(f"key :{key} value: {data[key]}") #could be removed
+                if key != "time": sum_data[key] += data[key]  # check it doesn't do avg of time
             log.debug('sum_data :'+str(sum_data))
             if (datetime.utcnow() - last_commit).seconds >= setg.time:
                 # calculate avg
                 for key in sum_data:
                     avg_data[key]= round(Decimal(sum_data[key])/count,2)
-                    # todo co2 with 2 zeros after point could be imporved low importance
+                    # todo co2 with 2 zeros after point could be improved low importance
                 count = 0
                 sum_data = {"temp":0, "hum":0, "co2":0}
                 last_commit = datetime.utcnow()
